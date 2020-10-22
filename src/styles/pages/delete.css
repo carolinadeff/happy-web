@@ -1,0 +1,66 @@
+#page-delete {
+    width: 100vw;
+    height: 100vh;
+    background: #FF669D;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#page-delete .content-wrapper {
+    width: 100%;
+    max-width: 914px;
+
+    height: 100%;
+    max-height: 490px;
+
+    background: url('../../images/delete.svg') no-repeat 100% center;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#page-delete .content-wrapper div {
+    width: 392px;
+    height: 338px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#page-delete .content-wrapper div h1 {
+    font-size: 80px;
+    line-height: 80px;
+}
+
+#page-delete .content-wrapper div p {
+    text-align: center;
+    font-size: 24px;
+    line-height: 34px;
+}
+
+#page-delete .content-wrapper div a {
+    height: 64px;
+    width: 243px;
+    border: 0;
+    cursor: pointer;
+    background: #D6487B;
+    border-radius: 20px;
+
+    color: #FFFFFF;
+    font-weight: 800;
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: background-color 0.2s;
+}
+
+#page-delete .content-wrapper div a:hover {
+    background: #FF86B1;
+}

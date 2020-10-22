@@ -1,0 +1,162 @@
+#page-dashboard {
+    display: flex;
+    height: 100vh;
+}
+
+aside.dashboard-sidebar {
+    height: 100%;
+    padding: 32px 24px;
+    background: linear-gradient(329.54deg, #15B6D6 0%, #15D6D6 100%);
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  aside.dashboard-sidebar img,
+  aside.dashboard-sidebar button,
+  #page-dashboard header a {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    border: 0;
+    outline: none;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  aside.dashboard-sidebar button,
+  #page-dashboard header a {
+    cursor: pointer;
+  }
+
+  aside.dashboard-sidebar button + button {
+      margin-top: 16px;
+  }
+
+  #page-dashboard header a {
+    background: #12AFCB;
+    transition: background-color 0.2s;
+    margin-left: 24px;
+  }
+   
+  #page-dashboard header a:hover {
+    background: #17D6EB;
+  }
+
+  #page-dashboard article {
+    width: 100%;
+    height: 100%;
+    padding: 40px 112px;
+    box-sizing: border-box;
+
+  }
+
+  #page-dashboard article header,
+  #page-dashboard article header div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  #page-dashboard article header {
+    height: 80px;
+    border-bottom: 2px solid #D3E2E5;
+    margin-bottom: 40px;
+  }
+
+  #page-dashboard article .ajuste-overflow {
+    height: calc(100vh - 200px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+
+  #page-dashboard article .ajuste-overflow::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  #page-dashboard article main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  @media (min-width: 1440px) {
+    #page-dashboard article main {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+#page-dashboard .orphanage-item {
+  background: #FFF;
+  width: 100%;
+  max-width: 544px;
+  min-width: 360px;
+  height: 309px;
+  border-radius: 20px;
+  border: 1px solid #D3E2E5;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#page-dashboard .orphanage-item .leaflet-container {
+  border: 1px solid #D3E2E5;
+  border-radius: 20px;
+  width: 100%;
+  height: 227px;
+}
+
+#page-dashboard .orphanage-item footer {
+  height: 100%;
+  max-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 32px;
+}
+
+#page-dashboard .orphanage-item footer p {
+  color: #4D6F80;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#page-dashboard .orphanage-item footer .botoes-edita-deleta {
+  display: flex;
+}
+
+#page-dashboard .orphanage-item footer .botoes-edita-deleta button {
+  width: 48px;
+  height: 48px;
+  background: #EBF2F5;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  margin-left: 8px;
+  transition: 0.2s;
+}
+
+#page-dashboard .orphanage-item footer .botoes-edita-deleta button:hover {
+  background: #FFDF6F;
+}
+
+
+
+@media (min-width: 1440px) {
+  #page-dashboard article main {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  #page-dashboard .orphanage-item footer p {
+    font-size: 21px;
+  }
+}
