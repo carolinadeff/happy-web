@@ -1,25 +1,33 @@
-import React, { FormEvent, useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { FormEvent, useState, useContext } from 'react';
+import { Link, useHistory } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+
+import { AuthContext } from '../contexts/AuthContext';
+
 import LogoCity from '../components/LogoCity';
 import checkIcon from '../images/check.svg'
 import '../styles/pages/login.css';
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [lembrar, setLembrar] = useState(false);
+    const history = useHistory();
 
-    function handleSubmit(event: FormEvent) {
-        event.preventDefault()
-        console.log(email, senha, lembrar)
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [remember, setRemember] = useState(false);
+
+    const { handleLogin } = useContext(AuthContext);
+
+    async function handleSubmit(event: FormEvent){
+        event.preventDefault();
+        await handleLogin(email, password)
+        history.push('/dashboard')
     }
 
     function handlecheckBox(){
-        if(lembrar) {
-            setLembrar(false)
+        if(remember) {
+            setRemember(false)
         }else{
-            setLembrar(true)
+            setRemember(true)
         }
     }
 
@@ -47,15 +55,15 @@ function Login() {
                             <input 
                                 id="senha"
                                 type="password"
-                                value={senha}
-                                onChange={event => setSenha(event.target.value)}
+                                value={password}
+                                onChange={event => setPassword(event.target.value)}
                             />
                         </div>
                         <div className="lembrar">
                             <div>
                                 <button
                                     type="button"
-                                    className={lembrar ? 'ativo' : ''}
+                                    className={remember ? 'ativo' : ''}
                                     onClick={() => handlecheckBox()}
                                 >
                                     <img src={checkIcon} alt="check"/>

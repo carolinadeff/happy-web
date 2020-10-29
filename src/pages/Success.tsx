@@ -12,7 +12,7 @@ function Success() {
                     <p>O cadastro deu certo e foi enviado
                     ao administrador para ser aprovado.
                     Agora é só esperar :)</p>
-                    <Link to="/app">Voltar para o mapa</Link>
+                    <Link to="/dashboard">Voltar para o dashboard</Link>
                 </div>
             </div>
         </div>

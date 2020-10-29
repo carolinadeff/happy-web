@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 
@@ -8,10 +8,21 @@ import '../styles/pages/create-orphanage.css';
 import Sidebar from "../components/Sidebar";
 import mapIcon from "../utils/mapicon";
 import api from "../services/api";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
-export default function CreateOrphanage() {
+interface OrphanageParams {
+  id: string; 
+}
+
+interface Image {
+  id: number;
+  url: string;
+}
+
+export default function EditOrphanage() {
   const history = useHistory()
+
+  const params = useParams<OrphanageParams>()
 
   const [position, setPosition] = useState({latitude: 0, longitude: 0 })
   const [name, setName] = useState('');
@@ -20,7 +31,27 @@ export default function CreateOrphanage() {
   const [opening_hours, setOpeningHours] = useState('');
   const [open_on_weekends, setOpenOnWeekends] = useState(true);
   const [images, setImages] = useState<File[]>([])
+  const [oldImages, setOldImages] = useState<string[]>([])
   const [previewImages, setPreviewImages] = useState<string[]>([])
+
+
+  useEffect( () => {
+
+    api.get(`orphanages/${params.id}`)
+      .then(response => response.data)
+      .then(orphanage => {
+        setPosition({ latitude: orphanage.latitude, longitude: orphanage.longitude });
+        setName(orphanage.name);
+        setAbout(orphanage.about);
+        setInstructions(orphanage.instructions);
+        setOpeningHours(orphanage.opening_hours);
+        setOpenOnWeekends(orphanage.open_on_weekend);
+        setOldImages(orphanage.images);
+        const urlImages = orphanage.images.map((image: { url: string; }) => image.url)
+        setPreviewImages(urlImages);  
+      })
+
+  }, [params.id])
 
 
   function handleMapClick(event: LeafletMouseEvent){
@@ -33,21 +64,20 @@ export default function CreateOrphanage() {
   }
 
   function handleSelectedImages(event: ChangeEvent<HTMLInputElement>) {
-    if(!event.target.files) {
-      return
+    if(event.target.files) {
+      const selectedImages = Array.from(event.target.files)
+      setImages(selectedImages);
+      const selectedImagesPreview = selectedImages.map(image => {
+        return URL.createObjectURL(image)
+      })
+      const allImages = previewImages.concat(selectedImagesPreview)
+      setPreviewImages(allImages)
     }
-
-    const selectedImages = Array.from(event.target.files)
-
-    setImages(selectedImages);
-
-    const selectedImagesPreview = selectedImages.map(image => {
-      return URL.createObjectURL(image)
-    });
-
-    setPreviewImages(selectedImagesPreview)
+    const oldKeptImages = oldImages.filter(image => previewImages.includes(JSON.parse(image).url))
+    setOldImages(oldKeptImages)
   }
 
+  
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
@@ -61,12 +91,13 @@ export default function CreateOrphanage() {
     data.append('longitude', String(longitude));
     data.append('instructions', instructions);
     data.append('opening_hours', opening_hours);
-    data.append('open_on_weekends', String(open_on_weekends))
+    data.append('open_on_weekends', String(open_on_weekends));
+    data.append('old_images', String(oldImages));
     images.forEach(image => {
       data.append('images', image)
     })
 
-    await api.post('/auth/orphanages', data)
+    await api.put(`/auth/orphanages/${params.id}`, data)
 
     history.push('/success');
 
@@ -81,7 +112,7 @@ export default function CreateOrphanage() {
             <legend>Dados</legend>
 
             <Map 
-              center={[-27.2092052,-49.6401092]} 
+              center={[position.latitude, position.longitude]} 
               style={{ width: '100%', height: 280 }}
               zoom={15}
               onclick={handleMapClick}

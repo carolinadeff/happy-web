@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FiPlus, FiArrowRight } from "react-icons/fi";
 import { useHistory, Link } from "react-router-dom";
 import { Map, Marker, TileLayer } from 'react-leaflet';
+
+import { AuthContext } from '../contexts/AuthContext';
 
 import mapMarkerImg from '../images/map-marker.svg';
 import mapIcon from "../utils/mapicon";
@@ -14,10 +16,44 @@ import iconeEdita from '../images/icone-edicao-orfa.svg';
 import iconeDeleta from '../images/icone-delecao-orfa.svg';
 
 import "../styles/pages/dashboard.css";
+import api from "../services/api";
+
+
+interface Orphanage {
+  id: number;
+  latitude: number;
+  longitude: number;
+  name: string;
+  about: string;
+  instructions: string;
+  opening_hours: string;
+  open_on_weekend: boolean;
+  images: Array<{
+    id: number;
+    url: string;
+  }>
+}
+
 
 function Dashboard() {
-  const { goBack } = useHistory();
-  const [modo, setModo] = useState('cadastrados')
+  const history = useHistory();
+  const [modo, setModo] = useState('cadastrados');
+  const [orphanages, setOrphanages] = useState<Orphanage[]>([])
+  
+  const { handleLogout } = useContext(AuthContext)
+
+  async function handleSair() {
+    await handleLogout()
+    history.push('/')
+  }
+
+
+  useEffect(() => {
+    (async() => {
+      const response = await api.get('/auth/orphanages');
+      setOrphanages(response.data);
+    })()
+  }, [])
 
   return (
     <div id="page-dashboard">
@@ -37,7 +73,7 @@ function Dashboard() {
             <img src={ modo === 'pendentes' ? PendentesSelected : Pendentes } alt="Visualizar Pendentes"/>
           </button>
         </div>
-        <button type="button" onClick={goBack}>
+        <button type="button" onClick={() => handleSair()}>
           <img src={Voltar} alt="voltar"/>
         </button>
       </aside>
@@ -48,7 +84,7 @@ function Dashboard() {
           <h1>Orfanatos Cadastrados</h1>
           <div>
             <p>2 Orfanatos</p>
-            <Link to="/orphanages/create" className="create-orphanage-dasboard">
+            <Link to="/create" className="create-orphanage-dasboard">
               <FiPlus size={32} color="#FFF" />
             </Link>
           </div>
@@ -56,10 +92,11 @@ function Dashboard() {
 
         <div className="ajuste-overflow">
           <main className="cadastrados">
-          
-            <div className="orphanage-item">
+            {orphanages.map(orphanage => {
+              return (
+                <div className="orphanage-item" key={orphanage.id}>
               <Map 
-                center={[-27.2092052,-49.6401092]} 
+                center={[orphanage.latitude, orphanage.longitude]} 
                 style={{ width: '100%', height: 280 }}
                 zoom={15}
                 minZoom={15}
@@ -69,16 +106,16 @@ function Dashboard() {
                 <TileLayer 
                   url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`}
                 />
-                <Marker interactive={false} icon={mapIcon} position={[-27.2092052,-49.6401092]} />
+                <Marker interactive={false} icon={mapIcon} position={[orphanage.latitude, orphanage.longitude]} />
               </Map>
               <footer>
-                <p>OrfanatoEsperança</p>
+                <p>{orphanage.name}</p>
                 { modo === 'cadastrados' ? (
                   <div className="botoes-edita-deleta">
-                    <button type="button">
+                    <button type="button" onClick={() => history.push(`/edit/${orphanage.id}`)}>
                       <img src={iconeEdita} alt="Edição"/>
                     </button>
-                    <button type="button">
+                    <button type="button" onClick={() => history.push(`/delete/${orphanage.id}`)}>
                       <img src={iconeDeleta} alt="Deleção"/>
                     </button>
                   </div>
@@ -91,6 +128,9 @@ function Dashboard() {
                 )}
               </footer>
             </div>
+              )
+            })}
+            
 
           </main>
         </div>

@@ -42,7 +42,7 @@
     line-height: 34px;
 }
 
-#page-delete .content-wrapper div a {
+#page-delete .content-wrapper div button {
     height: 64px;
     width: 243px;
     border: 0;
@@ -52,7 +52,7 @@
 
     color: #FFFFFF;
     font-weight: 800;
-    text-decoration: none;
+    outline: none;
 
     display: flex;
     justify-content: center;
@@ -61,6 +61,6 @@
     transition: background-color 0.2s;
 }
 
-#page-delete .content-wrapper div a:hover {
+#page-delete .content-wrapper div button:hover {
     background: #FF86B1;
 }
